@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6EBD4E9B-422A-4393-8683-DC437C8E3A9B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SimplifyMerchantSDK</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>4740450BB8C3DA605265209CECB11EDB100B423B</key>
+		<string>http://172.16.75.76:81/rekha.mani/mastercardfinal.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SimplifyMerchantSDK.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>4740450BB8C3DA605265209CECB11EDB100B423B</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://172.16.75.76:81/rekha.mani/mastercardfinal.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>4740450BB8C3DA605265209CECB11EDB100B423B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>4740450BB8C3DA605265209CECB11EDB100B423B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mastercardfinal</string>
+		</dict>
+	</array>
+</dict>
+</plist>

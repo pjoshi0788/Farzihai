@@ -1,0 +1,40 @@
+/*
+ Localizable.strings
+ MastercardFinal
+ 
+ Created by Brillio Mac Mini 8 on 6/4/15.
+ Copyright (c) 2015 Brillio. All rights reserved.
+ */
+
+"backgroundImage" = "img_NY_Background.png";
+"homeMtaLogo" = "mtaLogo.png";
+
+"homeAlert" = "Good Morning Beth! Let me take you to work...";
+"homeTransitAlert" = "The Long Island Express is running on time with no delays and is expected to arrive  at the  schedule stop at 8:30 am.";
+"tripAlert" = "Beth, your next train is 20 minutes away. Do you want to grab a quick coffee?";
+
+"starBuckAlert" = "Beth, please place your order from Starbuck's current drink menu.";
+"starBuckOrderConfirmation" = "Beth, would you like me to confirm your order with this location?";
+"starBucksLogoImage" = "starbuck.png";
+"mcLogo" = "mastercard.png";
+"homeMtaLogo" = "homemtalogo.png";
+"starBucksLat1"="40.7446783";
+"starBucksLong1"="-73.6027376";
+
+"starBucksLat2"="40.7418185";
+"starBucksLong2"="-73.6363009";
+
+"starBucksLat3"="40.7377114";
+"starBucksLong3"="-73.6128875";
+
+"FunFact1"="New York City is made up of 50 islands";
+"FunFact2"="New York City has over 800 miles of subway track";
+"FunFact3"="New York taxi drivers collectively speak about 60 languages";
+"FunFact4"="About 45% of leisure visitors to downtown New York City come from outside the United States";
+"FunFact5"="The smallest county in America is New York County, better known as Manhattan";
+"FunFact6"="If you put all the streets in New York City in a straight line, they would stretch to Japan";
+"FunFact7"="There are more French restaurants in New York City than in Paris";
+"FunFact8"="Chewing gum was invented in New York City in 1870 by Thomas Adams";
+"FunFact9"="The watersheds that supply water to New York City are roughly the size of Delaware";
+"FunFact10"="In 1926, the first outdoor mini-golf courses were built on rooftops in NYC";
+"FunFact11"="The top of the Empire State Building was originally built as a place to anchor blimps";
