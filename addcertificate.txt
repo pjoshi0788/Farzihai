@@ -1,0 +1,15 @@
+Steps to include bitbucket credential file:
+
+1. Open cmd prompt with admin access and go to your java folder
+2. Go to java path/bin
+3. java c:\Users\yatin.verma\Desktop\SSLPoke mypuma.bitbucket.net 443 
+4. now you need to run the following command
+get the filepaht of the sslpoke from desktop
+C:\<path to desktop>SSLPoke mypuma.bitbucket.net 443
+give a \ before sslpoke
+sslpoke is one word
+now execute this in the cmd line
+java C:\<path to desktop>SSLPoke mypuma.bitbucket.net 443
+add java before c:\
+
+keytool -import -alias example -keystore  "C:\Program Files\Java\jdk1.8.0_25\jre\lib\security\cacerts" -file C:\Users\yatin.verma\Desktop\bitbucket.mypuma.crt
