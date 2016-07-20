@@ -1,0 +1,187 @@
+package com.bolt.dashboard.client;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.bolt.dashboard.ConstantVariable;
+import com.bolt.dashboard.exceptions.TFSVersionControllerExceptions;
+import com.bolt.dashboard.model.SCMTool;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+
+public class TFSVersionControllerClientImplementation implements TFSVersionControllerClient {
+
+	private static final Log LOG = LogFactory.getLog(TFSVersionControllerClientImplementation.class);
+
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public List<SCMTool> getCommits(String url, String userName, String password)
+			throws TFSVersionControllerExceptions {
+		List<SCMTool> toolList = new ArrayList<SCMTool>();
+		JSONObject jsonObject;
+
+		jsonObject = makeRestCall(url, userName, password);
+		/*
+		 * List<Object> list = new ArrayList<Object>(); for (int i=0;
+		 * i<jsonArray.length(); i++) { list.add( jsonArray.getString(i) ); }
+		 * List<Object> objOutput = (ArrayList<Object>) jsonObject.get("value");
+		 */
+		JSONArray jsonArray = jsonObject.getJSONArray("value");
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+
+			SCMTool commit = new SCMTool();
+			commit.setScType("TFS");
+			commit.setTimestamp(new Date().getTime());
+			JSONObject object = jsonArray.getJSONObject(i);
+			if (object.has("comment")) {
+				commit.setScmCommitLog(object.get("comment").toString());
+			}
+			if (object.has("createdDate")) {
+				long scmDate = ConstantVariable.timestamp(object.get("createdDate"));
+				commit.setScmCommitTimestamp(scmDate);
+			}
+			if (object.has("url")) {
+				commit.setScmUrl(object.get("url").toString());
+			}
+			if (object.has("changesetId")) {
+				String revision = object.get("changesetId").toString();
+				commit.setScmRevisionNumber(revision);
+				String changeSetUrl = url + revision + "/changes?api-version=1.0";
+				LOG.info("Changeset Id URL  " + changeSetUrl);
+				int[] changes = new int[3];
+				changes = makeRestCallForChangeType(changeSetUrl, userName, password);
+				int totalAdditions = changes[0];
+				int totalDeletions = changes[1];
+				int totalChanges = changes[2];
+				commit.setAdditionInCommit(totalAdditions);
+				commit.setDeletionInCommit(totalDeletions);
+				commit.setNumberOfChanges(totalChanges);
+			}
+			if (object.has("checkedInBy")) {
+				JSONObject obj = object.getJSONObject("checkedInBy");
+
+				if (obj.has("displayName")) {
+					commit.setScmCommiter(obj.get("displayName").toString());
+				}
+			}
+
+			toolList.add(commit);
+
+		}
+		return toolList;
+		/*
+		 * for (Object objOutputJson : objOutput) {
+		 * 
+		 * Iterator<Entry<Object, Object>> keySetIterator = ((Map<Object,
+		 * Object>) objOutputJson).entrySet() .iterator(); { // SCMTool commit =
+		 * new SCMTool(); commit.setScType("TFS"); commit.setTimestamp(new
+		 * Date().getTime()); while (keySetIterator.hasNext()) { Entry hm =
+		 * (Entry) keySetIterator.next(); if
+		 * ("comment".equalsIgnoreCase(hm.getKey().toString()) &&
+		 * hm.getValue().toString() != null) {
+		 * commit.setScmCommitLog(hm.getValue().toString()); }
+		 * 
+		 * if ("createdDate".equalsIgnoreCase(hm.getKey().toString()) &&
+		 * hm.getValue() != null) {
+		 * 
+		 * long scmDate = ConstantVariable.timestamp(hm.getValue());
+		 * commit.setScmCommitTimestamp(scmDate);
+		 * 
+		 * } if ("url".equalsIgnoreCase(hm.getKey().toString()) &&
+		 * hm.getValue().toString() != null) {
+		 * 
+		 * commit.setScmUrl(hm.getValue().toString()); }
+		 * 
+		 * if ("changesetId".equalsIgnoreCase(hm.getKey().toString())) { String
+		 * revision = hm.getValue().toString();
+		 * commit.setScmRevisionNumber(revision); String changeSetUrl = url +
+		 * revision + "/changes?api-version=1.0"; LOG.info("Changeset Id URL  "
+		 * + changeSetUrl); int[] changes = new int[3]; changes =
+		 * makeRestCallForChangeType(changeSetUrl, userName, password); int
+		 * totalAdditions = changes[0]; int totalDeletions = changes[1]; int
+		 * totalChanges = changes[2];
+		 * commit.setAdditionInCommit(totalAdditions);
+		 * commit.setDeletionInCommit(totalDeletions);
+		 * commit.setNumberOfChanges(totalChanges); } if
+		 * ("checkedInBy".equalsIgnoreCase(hm.getKey().toString())) {
+		 * Iterator<Entry<Object, Object>> keySetIteratorNew = ((Map<Object,
+		 * Object>) hm.getValue()) .entrySet().iterator(); while
+		 * (keySetIteratorNew.hasNext()) { Entry hmNew = (Entry)
+		 * keySetIteratorNew.next();
+		 * 
+		 * if ("displayName".equalsIgnoreCase(hmNew.getKey().toString()) &&
+		 * hmNew.getValue() != null) {
+		 * 
+		 * commit.setScmCommiter(hmNew.getValue().toString());
+		 * 
+		 * }
+		 * 
+		 * }
+		 * 
+		 * }
+		 * 
+		 * } toolList.add(commit); } } return toolList;
+		 */
+
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public int[] makeRestCallForChangeType(String url, String userId, String password) {
+		int totalAdditions = 0;
+		int totalDeletions = 0;
+		int totalChanges = 0;
+
+		JSONObject jsonObject = makeRestCall(url, userId, password);
+		JSONArray objOutput = jsonObject.getJSONArray("value");
+		for (int i = 0; i < objOutput.length(); i++) {
+			JSONObject object = objOutput.getJSONObject(i);
+				if (object.has("changeType")) {
+					if (object.get("changeType").toString().contains("add"))
+						totalAdditions = totalAdditions + 1;
+
+					if (object.get("changeType").toString().contains("delete"))
+						totalDeletions = totalDeletions + 1;
+
+				}
+			
+		}
+		totalChanges = (totalAdditions + totalDeletions);
+		LOG.info("total additions per revision " + totalAdditions);
+		LOG.info("total deletions per revision " + totalDeletions);
+		LOG.info("Total changes per revision " + totalChanges);
+		return new int[] { totalAdditions, totalDeletions, totalChanges };
+	}
+
+	private JSONObject makeRestCall(String url, String userId, String password) {
+		ClientResponse resp = null;
+		if (!"".equals(userId) && !"".equals(password)) {
+
+			com.sun.jersey.api.client.Client restClient = com.sun.jersey.api.client.Client.create();
+			String authString = userId + ":" + password;
+			String authStringEnc = new Base64().encode(authString.getBytes()).toString();
+			WebResource webResource = restClient.resource(url);
+			resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
+					.get(ClientResponse.class);
+			if (resp.getStatus() != 200) {
+				LOG.error("Unable to connect to the server");
+			}
+			String output = resp.getEntity(String.class);
+			JSONObject json = new JSONObject(output);
+			return json;
+
+		}
+		return null;
+
+	}
+
+}
